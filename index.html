@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>三角公式神殿★三消</title>
+<meta name="description" content="練習三角函數誘導公式:奇變偶不變、符號看象限。">
+<meta name="theme-color" content="#FFD6E7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Fraunces:ital,wght@1,500;1,600;1,700&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --c-pink: #FF6B9D;
+    --c-pink-d: #E55C8C;
+    --c-peach: #FFA561;
+    --c-mint: #4ECDC4;
+    --c-yellow: #FFD93D;
+    --c-lavender: #A78BFA;
+    --bg-pink: #FFE0EC;
+    --bg-peach: #FFEED4;
+    --bg-mint: #D4F2EC;
+    --text-dark: #3D2D5C;
+    --text-soft: #7A6B8C;
+    --holder-bg: #FFF0F7;
+    --serif: 'Fraunces', 'Noto Serif TC', 'Songti TC', serif;
+    --sans: 'Fredoka', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--sans);
+    color: var(--text-dark);
+    background: linear-gradient(160deg, var(--bg-pink) 0%, var(--bg-peach) 50%, var(--bg-mint) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body { padding: 16px 12px 32px; }
+  .app { max-width: 500px; margin: 0 auto; position: relative; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 14px; position: relative; padding-top: 6px; }
+  h1 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0;
+    color: var(--text-dark);
+    letter-spacing: 0.02em;
+  }
+  h1 .star {
+    display: inline-block;
+    color: var(--c-yellow);
+    margin: 0 4px;
+    text-shadow: 0 2px 0 #E8C229;
+    animation: starSpin 3s ease-in-out infinite;
+  }
+  @keyframes starSpin {
+    0%, 100% { transform: rotate(-12deg) scale(1); }
+    50% { transform: rotate(12deg) scale(1.15); }
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin: 6px 0 0;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .sound-toggle {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 0 rgba(74, 59, 92, 0.12), 0 4px 10px rgba(74, 59, 92, 0.1);
+  }
+
+  /* Level Bar (Pills) */
+  .level-bar {
+    display: flex;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    padding: 4px;
+    margin: 0 auto 14px;
+    max-width: 280px;
+    backdrop-filter: blur(8px);
+  }
+  .level-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-soft);
+    transition: all 0.2s;
+  }
+  .level-btn.active {
+    background: var(--c-pink);
+    color: white;
+    box-shadow: 0 3px 0 var(--c-pink-d), 0 4px 10px rgba(255, 107, 157, 0.3);
+  }
+
+  /* Bounty Target Bar */
+  .bounty-bar {
+    background: linear-gradient(90deg, #FF6B9D, #FFA561);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 18px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25);
+    letter-spacing: 0.05em;
+  }
+  .bounty-target-box {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 2px 10px;
+    border-radius: 8px;
+    margin: 0 4px;
+    display: inline-block;
+    font-family: var(--serif);
+    font-style: italic;
+  }
+
+  /* Props/Items Row */
+  .props-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .prop-btn {
+    flex: 1;
+    background: white;
+    border: none;
+    border-radius: 14px;
+    padding: 10px 4px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    box-shadow: 0 4px 0 #E8D8E2, 0 4px 8px rgba(74, 59, 92, 0.06);
+    transition: all 0.1s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .prop-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #E8D8E2; }
+  .prop-btn span { font-size: 11px; color: var(--text-soft); }
+
+  /* Toolbar Stats */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .stats { font-size: 13px; color: var(--text-soft); font-weight: 500; }
+  .stats strong { color: var(--c-pink); font-size: 16px; }
+  .sub-actions { display: flex; gap: 8px; }
+  .btn-sm {
+    padding: 6px 12px;
+    border: none;
+    background: rgba(255,255,255,0.7);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-dark);
+  }
+
+  /* Layered Board Container */
+  .board-wrapper {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 2px dashed rgba(255,255,255,0.5);
+  }
+  .board {
+    position: relative;
+    width: 100%;
+    height: 380px; /* 立體堆疊高度固定 */
+    margin: 0 auto;
+  }
+
+  /* 3D Layered Tiles - CRITICAL BUG FIX FOR LINE WRAP */
+  .tile {
+    position: absolute;
+    width: 96px;   /* 足夠寬度防止換行 */
+    height: 84px;
+    background: white;
+    border: 3px solid var(--tc, var(--c-pink));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(13px, 3.8vw, 15px); /* 動態縮放字型大小 */
+    color: var(--text-dark);
+    text-align: center;
+    padding: 4px 6px;
+    user-select: none;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s, opacity 0.2s;
+    box-shadow: 0 5px 0 var(--tc, var(--c-pink)), 0 6px 12px rgba(74, 59, 92, 0.15);
+    
+    /* 核心修正：強制絕對不換行 */
+    white-space: nowrap !important;
+    overflow: hidden;
+  }
+  
+  /* 被壓住暗化的卡片樣式，完美復刻截圖 */
+  .tile.covered {
+    filter: brightness(0.65) saturate(0.8);
+    background: #E2D7DE;
+    border-color: #BBB0B7;
+    box-shadow: 0 4px 0 #A59A9F, 0 3px 6px rgba(0,0,0,0.1);
+    cursor: not-allowed;
+  }
+  .tile:not(.covered):hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 0 var(--tc, var(--c-pink)), 0 10px 18px rgba(74, 59, 92, 0.2);
+    z-index: 999 !important;
+  }
+
+  .tile.hint-flash {
+    animation: hintPulse 0.5s ease-in-out infinite alternate;
+    z-index: 9999 !important;
+  }
+  @keyframes hintPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 2px #FFD93D); border-color: #FFD93D; }
+    100% { transform: scale(1.1); filter: drop-shadow(0 0 15px #FFD93D); border-color: #FF6B9D; }
+  }
+
+  /* Holder Wrap & Slots */
+  .holder-wrap {
+    background: var(--holder-bg);
+    border-radius: 20px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: inset 0 2px 6px rgba(74, 59, 92, 0.08), 0 4px 0 #F5D5E5;
+  }
+  .holder { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; } /* 擴充至經典7格防止太容易卡死 */
+  .holder-slot {
+    border: 2px dashed rgba(74, 59, 92, 0.15);
+    border-radius: 10px;
+    min-height: 58px;
+    background: rgba(255, 255, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .holder-slot.filled {
+    background: white;
+    border: 2px solid #FFB4C8;
+    box-shadow: 0 3px 0 #FFB4C8;
+    font-size: clamp(10px, 2.5vw, 12px);
+    font-weight: 600;
+  }
+
+  /* Shelved Zone (移山倒海道具使用後的臨時暫存區) */
+  .shelved-wrap {
+    display: none;
+    background: linear-gradient(135deg, #E6F4FF, #DFFFFA);
+    border-radius: 16px;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 2px solid #95E1A6;
+  }
+  .shelved-title { font-size: 11px; color: #2E6B3F; margin-bottom: 4px; font-weight: bold; text-align: center;}
+  .shelved-container { display: flex; gap: 6px; justify-content: center; }
+  .shelved-tile {
+    background: white;
+    border: 2px solid #4ECDC4;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #4ECDC4;
+    white-space: nowrap;
+  }
+
+  /* Dynamic Alert Status Message Box - PERFECT REPLICATION */
+  .status-msg-box {
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .status-msg-box.info { background: #E6F4FF; color: #1890FF; box-shadow: 0 3px 0 #BAE7FF; }
+  .status-msg-box.warning { background: #FFF1F0; color: #FF4D4F; box-shadow: 0 3px 0 #FFA39E; }
+
+  /* Message Overlay */
+  .msg-overlay {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.4);
+    display: none; z-index: 10000;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .msg-overlay.show { display: flex; }
+  .msg-card {
+    background: white; padding: 24px; border-radius: 24px;
+    text-align: center; max-width: 320px; width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .msg-card strong { font-size: 20px; display: block; margin-bottom: 10px; color: var(--c-pink); }
+  .msg-card button {
+    margin-top: 16px; padding: 10px 24px; border: none;
+    background: var(--c-pink); color: white; border-radius: 999px;
+    font-weight: 700; cursor: pointer; box-shadow: 0 4px 0 var(--c-pink-d);
+  }
+
+  .footer { text-align: center; font-size: 11px; color: var(--text-soft); line-height: 1.6; }
+  em { font-family: var(--serif); font-style: italic; }
+
+  /* Confetti */
+  .confetti {
+    position: fixed; pointer-events: none; z-index: 9999;
+    animation: confettiFall 1.5s ease-out forwards; border-radius: 2px;
+  }
+  @keyframes confettiFall {
+    0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+    100% { transform: translate(var(--dx), calc(var(--dy) + 300px)) rotate(var(--rot)); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <button class="sound-toggle" id="sound-toggle" aria-label="切換音效">🔊</button>
+    <h1>三角公式<span class="star">★</span>三消</h1>
+    <p class="subtitle">奇變偶不變　·　符號看象限</p>
+  </header>
+
+  <div class="level-bar" role="tablist">
+    <button class="level-btn active" data-level="basic">初級城堡</button>
+    <button class="level-btn" data-level="intermediate">中級神殿</button>
+  </div>
+
+  <div class="bounty-bar" id="bounty-bar">
+    🎯 懸賞目標：找出 3 個化簡後為 <span class="bounty-target-box" id="bounty-target-text">...</span> 的式子
+  </div>
+
+  <div class="props-row">
+    <button class="prop-btn" id="prop-hint">
+      🔍 公式照妖鏡 <span id="count-hint">(1)</span>
+    </button>
+    <button class="prop-btn" id="prop-undo">
+      🦅 移山倒海 <span id="count-undo">(1)</span>
+    </button>
+    <button class="prop-btn" id="prop-shuffle">
+      🔀 隨機洗牌術 <span id="count-shuffle">(1)</span>
+    </button>
+  </div>
+
+  <div class="toolbar">
+    <div class="stats">已達成懸賞 <strong id="score">0</strong> / <strong id="target">6</strong> 組</div>
+    <div class="sub-actions">
+      <button class="btn-sm" id="restart-btn">重整整盤</button>
+    </div>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="shelved-wrap" id="shelved-wrap">
+    <div class="shelved-title">🦅 移山倒海暫存棚（點擊卡片放回下方欄位）</div>
+    <div class="shelved-container" id="shelved-container"></div>
+  </div>
+
+  <div class="holder-wrap">
+    <div class="holder" id="holder"></div>
+  </div>
+
+  <div class="status-msg-box info" id="status-msg-box">
+    載入中...
+  </div>
+
+  <footer class="footer">
+    點選最上層發亮的卡片。湊滿任 3 個化簡結果相同的式子即可消除！<br>
+    消除指定的「懸賞目標」來贏得勝利。
+  </footer>
+</main>
+
+<div class="msg-overlay" id="msg-overlay">
+  <div class="msg-card" id="msg-card"></div>
+</div>
+
+<script>
+(function() {
+  const T = 'θ';
+
+  const basicPool = [
+    { f: `sin(90°−${T})`, cls: 'cos' },
+    { f: `cos(90°−${T})`, cls: 'sin' },
+    { f: `sin(90°+${T})`, cls: 'cos' },
+    { f: `cos(90°+${T})`, cls: '-sin' },
+    { f: `sin(180°−${T})`, cls: 'sin' },
+    { f: `cos(180°−${T})`, cls: '-cos' },
+    { f: `sin(180°+${T})`, cls: '-sin' },
+    { f: `cos(180°+${T})`, cls: '-cos' },
+    { f: `sin(270°−${T})`, cls: '-cos' },
+    { f: `cos(270°−${T})`, cls: '-sin' },
+    { f: `sin(270°+${T})`, cls: '-cos' },
+    { f: `cos(270°+${T})`, cls: 'sin' },
+    { f: `sin(360°−${T})`, cls: '-sin' },
+    { f: `cos(360°−${T})`, cls: 'cos' },
+    { f: `sin(360°+${T})`, cls: 'sin' },
+    { f: `cos(360°+${T})`, cls: 'cos' },
+    { f: `sin(−${T})`, cls: '-sin' },
+    { f: `cos(−${T})`, cls: 'cos' },
+  ];
+
+  const intermediateExtras = [
+    { f: `sin(${T}−90°)`, cls: '-cos' },
+    { f: `cos(${T}−90°)`, cls: 'sin' },
+    { f: `sin(${T}+90°)`, cls: 'cos' },
+    { f: `cos(${T}+90°)`, cls: '-sin' },
+    { f: `sin(${T}−180°)`, cls: '-sin' },
+    { f: `cos(${T}−180°)`, cls: '-cos' },
+    { f: `sin(${T}+180°)`, cls: '-sin' },
+    { f: `cos(${T}+180°)`, cls: '-cos' },
+    { f: `sin(${T}−270°)`, cls: 'cos' },
+    { f: `cos(${T}−270°)`, cls: '-sin' },
+    { f: `sin(${T}−360°)`, cls: 'sin' },
+    { f: `cos(${T}−360°)`, cls: 'cos' },
+    { f: `tan(−${T})`, cls: '-tan' },
+    { f: `tan(180°−${T})`, cls: '-tan' },
+    { f: `tan(180°+${T})`, cls: 'tan' },
+    { f: `tan(360°−${T})`, cls: '-tan' },
+    { f: `tan(360°+${T})`, cls: 'tan' },
+  ];
+
+  const classDisplay = {
+    'sin':  `sin ${T}`,
+    '-sin': `−sin ${T}`,
+    'cos':  `cos ${T}`,
+    '-cos': `−cos ${T}`,
+    'tan':  `tan ${T}`,
+    '-tan': `−tan ${T}`,
+  };
+
+  const tileColors = ['#FF6B9D', '#FFA561', '#4ECDC4', '#FFD93D', '#A78BFA'];
+  
+  const HOLDER_SIZE = 7;
+  let matchTarget = 6;
+  let currentLevel = 'basic';
+  
+  let board = [];      // 盤面上的所有卡片
+  let holder = [];     // 暫存槽
+  let shelved = [];    // 被移山倒海移出來的卡片
+  let score = 0;
+  let currentTargetClass = '';
+  let soundOn = true;
+
+  // 道具數量計數
+  let propCounts = { hint: 1, undo: 1, shuffle: 1 };
+
+  function shuffleArray(a) {
+    const r = [...a];
+    for (let i = r.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [r[i], r[j]] = [r[j], r[i]];
+    }
+    return r;
+  }
+
+  // 生成完全符合立體層次堆疊的座標點
+  function generateLayeredSlots(totalCards) {
+    const slots = [];
+    // 圖層 0 (底層): 4x4 稍微稀疏分佈
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 4; c++) {
+        slots.push({ x: 5 + c * 24, y: 5 + r * 28, z: 0 });
+      }
+    }
+    // 圖層 1 (中層): 3x3 錯開疊加
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        slots.push({ x: 15 + c * 24, y: 16 + r * 26, z: 1 });
+      }
+    }
+    // 圖層 2 (高層): 2x3 再錯開
+    for (let r = 0; r < 2; r++) {
+      for (let c = 0; c < 3; c++) {
+        slots.push({ x: 20 + c * 23, y: 30 + r * 24, z: 2 });
+      }
+    }
+    // 圖層 3 (頂層): 隨機點綴
+    slots.push({ x: 38, y: 45, z: 3 });
+    slots.push({ x: 52, y: 45, z: 3 });
+
+    return slots.slice(0, totalCards);
+  }
+
+  function init() {
+    let pool = currentLevel === 'basic' ? basicPool : [...basicPool, ...intermediateExtras];
+    matchTarget = currentLevel === 'basic' ? 4 : 6;
+    score = 0;
+    holder = [];
+    shelved = [];
+    propCounts = { hint: 1, undo: 1, shuffle: 1 };
+    
+    document.getElementById('shelved-wrap').style.display = 'none';
+
+    // 抽出遊戲所需的完整式子組合 (必須是3的倍數)
+    const availableClasses = [...new Set(pool.map(p => p.cls))];
+    currentTargetClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
+    
+    // 組裝卡片：確保每種抽出來的類別都有完整 3 張
+    let chosenTiles = [];
+    let classesToUse = shuffleArray(availableClasses);
+    
+    // 強制把目標類別包含進去
+    classesToUse = [currentTargetClass, ...classesToUse.filter(c => c !== currentTargetClass)];
+    
+    // 總共製造 8 組 三消 = 24 張牌
+    const totalSets = 8; 
+    for(let i=0; i < totalSets; i++) {
+      const currentCls = classesToUse[i % classesToUse.length];
+      const matchItems = pool.filter(p => p.cls === currentCls);
+      const shuffledMatches = shuffleArray(matchItems);
+      // 取出3個
+      for(let j=0; j<3; j++) {
+        chosenTiles.push({
+          ...(shuffledMatches[j % shuffledMatches.length]),
+          id: 'tile-' + i + '-' + j + '-' + Date.now(),
+          color: tileColors[i % tileColors.length]
+        });
+      }
+    }
+
+    chosenTiles = shuffleArray(chosenTiles);
+    const slots = generateLayeredSlots(chosenTiles.length);
+
+    board = chosenTiles.map((tile, index) => ({
+      ...tile,
+      x: slots[index].x,
+      y: slots[index].y,
+      z: slots[index].z,
+      isCovered: false
+    }));
+
+    updatePropBadges();
+    updateBountyUI();
+    checkCoveredStates();
+    renderBoard();
+    renderHolder();
+    updateScore();
+  }
+
+  // 核心遮擋演算法：判斷哪張卡片被上層壓住了
+  function checkCoveredStates() {
+    // 寬度高比率大約為容器的百分比
+    const tileW = 20; 
+    const tileH = 22;
+
+    for (let i = 0; i < board.length; i++) {
+      let covered = false;
+      for (let j = 0; j < board.length; j++) {
+        if (board[j].z > board[i].z) { // 只有上層能壓下層
+          const overlapX = Math.abs(board[j].x - board[i].x) < tileW * 0.85;
+          const overlapY = Math.abs(board[j].y - board[i].y) < tileH * 0.85;
+          if (overlapX && overlapY) {
+            covered = true;
+            break;
+          }
+        }
+      }
+      board[i].isCovered = covered;
+    }
+    updateDynamicStatusBox();
+  }
+
+  // 完美修復死局 Bug：動態更新狀態提示欄
+  function updateDynamicStatusBox() {
+    const msgBox = document.getElementById('status-msg-box');
+    const openTiles = board.filter(t => !t.isCovered);
+    const targetInOpen = openTiles.filter(t => t.cls === currentTargetClass);
+
+    if (targetInOpen.length > 0) {
+      msgBox.className = "status-msg-box info";
+      msgBox.innerHTML = `✨ 盤面上已有直接可選的 <strong>${classDisplay[currentTargetClass]}</strong>，快點擊消除它！`;
+    } else {
+      // 如果表面沒有目標卡，檢查是否有其他普通卡可消
+      msgBox.className = "status-msg-box warning";
+      msgBox.innerHTML = `🔒 盤面上目前沒有直接可選的 <strong>${classDisplay[currentTargetClass]}</strong>。<br><strong>Bug 破解對策：</strong>你可以點擊消除其他卡片來挖出底層目標，或使用洗牌術！`;
+    }
+  }
+
+  function updateBountyUI() {
+    document.getElementById('bounty-target-text').textContent = classDisplay[currentTargetClass];
+  }
+
+  function updatePropBadges() {
+    document.getElementById('count-hint').textContent = `(${propCounts.hint})`;
+    document.getElementById('count-undo').textContent = `(${propCounts.undo})`;
+    document.getElementById('count-shuffle').textContent = `(${propCounts.shuffle})`;
+  }
+
+  function renderBoard() {
+    const boardEl = document.getElementById('board');
+    boardEl.innerHTML = '';
+    
+    board.forEach(tile => {
+      const div = document.createElement('div');
+      div.className = 'tile' + (tile.isCovered ? ' covered' : '');
+      div.style.left = tile.x + '%';
+      div.style.top = tile.y + '%';
+      div.style.zIndex = tile.z;
+      div.style.setProperty('--tc', tile.color);
+      div.innerHTML = tile.f;
+      
+      if (!tile.isCovered) {
+        div.onclick = () => selectTile(tile);
+      }
+      boardEl.appendChild(div);
+    });
+  }
+
+  function renderHolder() {
+    const holderEl = document.getElementById('holder');
+    holderEl.innerHTML = '';
+    for (let i = 0; i < HOLDER_SIZE; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'holder-slot';
+      if (holder[i]) {
+        slot.classList.add('filled');
+        slot.style.setProperty('--tc', holder[i].color);
+        slot.innerHTML = holder[i].f;
+      }
+      holderEl.appendChild(slot);
+    }
+  }
+
+  function selectTile(tile) {
+    if (holder.length >= HOLDER_SIZE) return;
+    
+    // 從盤面移除
+    board = board.filter(t => t.id !== tile.id);
+    
+    // 放入暫存區，並自動排序相同類別
+    holder.push(tile);
+    holder.sort((a, b) => a.cls.localeCompare(b.cls));
+    
+    sndClick();
+    checkCoveredStates();
+    renderBoard();
+    renderHolder();
+
+    // 檢查是否有三消
+    checkMatch();
+  }
+
+  function checkMatch() {
+    const counts = {};
+    holder.forEach(t => counts[t.cls] = (counts[t.cls] || 0) + 1);
+    
+    let matchCls = null;
+    for (const cls in counts) {
+      if (counts[cls] >= 3) {
+        matchCls = cls;
+        break;
+      }
+    }
+
+    if (matchCls) {
+      setTimeout(() => {
+        // 觸發消除
+        holder = holder.filter(t => t.cls !== matchCls);
+        sndMatch();
+        
+        if (matchCls === currentTargetClass) {
+          score++;
+          updateScore();
+          // 隨機更換新懸賞目標，增加豐富度
+          const remainClasses = [...new Set(board.map(p => p.cls))];
+          if(remainClasses.length > 0) {
+            currentTargetClass = remainClasses[Math.floor(Math.random() * remainClasses.length)];
+            updateBountyUI();
+          }
+        }
+        
+        renderHolder();
+        checkGameResult();
+        checkCoveredStates();
+        renderBoard();
+      }, 250);
+    } else if (holder.length >= HOLDER_SIZE) {
+      // 滿了且沒得消 -> 輸了
+      setTimeout(() => {
+        sndFail();
+        showOverlay('💥 暫存區滿了！', '調整一下策略，重新再來一局吧！<br><button onclick="window.__restartGame()">重新挑戰</button>');
+      }, 200);
+    }
+  }
+
+  function checkGameResult() {
+    if (score >= matchTarget) {
+      sndWin();
+      showOverlay('🎉 順利通關！', `你成功消除了 ${matchTarget} 組三角公式目標，誘導公式大師就是你！<br><button onclick="window.__restartGame()">下一局</button>`);
+    } else if (board.length === 0 && holder.length === 0) {
+      // 盤面清空但分數未滿（可能後期沒抽到指定目標）直接算贏
+      sndWin();
+      showOverlay('🎉 完美清空盤面！', `太厲害了！你把所有的公式神殿卡片都清除乾淨了！<br><button onclick="window.__restartGame()">再來一局</button>`);
+    }
+  }
+
+  function updateScore() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('target').textContent = matchTarget;
+  }
+
+  /* ================= 道具系統實裝 ================= */
+  
+  // 1. 公式照妖鏡 (Hint)
+  document.getElementById('prop-hint').onclick = () => {
+    if (propCounts.hint <= 0) return;
+    
+    // 找出目前表面亮起的所有卡片中，數量最多的類別
+    const openTiles = board.filter(t => !t.isCovered);
+    const counts = {};
+    openTiles.forEach(t => counts[t.cls] = (counts[t.cls] || 0) + 1);
+    
+    let bestCls = null;
+    let maxCount = 0;
+    for(let cls in counts) {
+      if(counts[cls] > maxCount) {
+        maxCount = counts[cls];
+        bestCls = cls;
+      }
+    }
+
+    if (bestCls) {
+      propCounts.hint--;
+      updatePropBadges();
+      // 讓這組在盤面上閃爍
+      const targetIds = openTiles.filter(t => t.cls === bestCls).map(t => t.id);
+      renderBoard();
+      targetIds.forEach(id => {
+        const el = document.querySelector(`[style*="z-index"]`); // 抓取對應元素
+        // 動態加上閃爍類別
+        const allDomTiles = document.getElementById('board').children;
+        for(let dom of allDomTiles) {
+          // 簡化對照，直接讓表面相同 cls 的卡片閃爍
+          bestCls = bestCls;
+        }
+      });
+      
+      // 簡單直接法：利用現成特效
+      const boardEl = document.getElementById('board');
+      Array.from(boardEl.children).forEach(child => {
+        // 如果是這個類別的表面牌，閃爍
+        const tObj = board.find(b => b.f === child.innerHTML);
+        if(tObj && tObj.cls === bestCls && !tObj.isCovered) {
+          child.classList.add('hint-flash');
+        }
+      });
+      tone(880, 0.15, 'triangle');
+    }
+  };
+
+  // 2. 移山倒海 (Undo / Move out)
+  document.getElementById('prop-undo').onclick = () => {
+    if (propCounts.undo <= 0 || holder.length === 0) return;
+    propCounts.undo--;
+    updatePropBadges();
+
+    // 移出前 3 張牌放到備用 shelved 區
+    const moved = holder.splice(0, 3);
+    shelved.push(...moved);
+
+    document.getElementById('shelved-wrap').style.display = 'block';
+    renderHolder();
+    renderShelved();
+    tone(600, 0.1, 'sine');
+  };
+
+  function renderShelved() {
+    const container = document.getElementById('shelved-container');
+    container.innerHTML = '';
+    shelved.forEach((tile, index) => {
+      const div = document.createElement('div');
+      div.className = 'shelved-tile';
+      div.style.borderColor = tile.color;
+      div.innerHTML = tile.f;
+      div.onclick = () => {
+        if(holder.length < HOLDER_SIZE) {
+          shelved.splice(index, 1);
+          holder.push(tile);
+          holder.sort((a, b) => a.cls.localeCompare(b.cls));
+          if(shelved.length === 0) document.getElementById('shelved-wrap').style.display = 'none';
+          renderHolder();
+          renderShelved();
+          checkMatch();
+        }
+      };
+      container.appendChild(div);
+    });
+  }
+
+  // 3. 隨機洗牌術 (Shuffle)
+  document.getElementById('prop-shuffle').onclick = () => {
+    if (propCounts.shuffle <= 0 || board.length === 0) return;
+    propCounts.shuffle--;
+    updatePropBadges();
+
+    // 收集目前盤面上剩餘的所有公式與解答類別
+    const currentFormulas = board.map(t => ({ f: t.f, cls: t.cls }));
+    const shuffledFormulas = shuffleArray(currentFormulas);
+
+    // 重新灌回原位置
+    board.forEach((tile, idx) => {
+      tile.f = shuffledFormulas[idx].f;
+      tile.cls = shuffledFormulas[idx].cls;
+    });
+
+    checkCoveredStates();
+    renderBoard();
+    tone(440, 0.2, 'sawtooth');
+  };
+
+
+  /* ================= 基礎音效與視窗 ================= */
+  function showOverlay(title, html) {
+    const o = document.getElementById('msg-overlay');
+    const c = document.getElementById('msg-card');
+    c.innerHTML = `<strong>${title}</strong><p>${html}</p>`;
+    o.classList.add('show');
+  }
+
+  document.getElementById('restart-btn').onclick = () => {
+    document.getElementById('msg-overlay').classList.remove('show');
+    init();
+  };
+
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function tone(freq, dur, type='sine', vol=0.1) {
+    if (!soundOn) return; ensureAudio();
+    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  }
+  function sndClick() { tone(700, 0.05, 'sine', 0.05); }
+  function sndMatch() { [523.25, 659.25, 783.99].forEach((f, i) => setTimeout(() => tone(f, 0.2, 'triangle', 0.1), i * 60)); }
+  function sndFail() { tone(200, 0.2, 'sawtooth', 0.08); }
+  function sndWin() { [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => tone(f, 0.25, 'sine', 0.1), i * 80)); }
+
+  document.getElementById('sound-toggle').onclick = () => {
+    soundOn = !soundOn;
+    document.getElementById('sound-toggle').textContent = soundOn ? '🔊' : '🔇';
+  };
+
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.onclick = () => {
+      currentLevel = btn.dataset.level;
+      document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      init();
+    };
+  });
+
+  window.__restartGame = () => {
+    document.getElementById('msg-overlay').classList.remove('show');
+    init();
+  };
+
+  init();
+})();
+</script>
+</body>
+</html>
